@@ -1,4 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Skinet.API.Data;
+using Skinet.API.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Skinet.API.Controllers
 {
@@ -6,17 +11,24 @@ namespace Skinet.API.Controllers
     [Route("api/[Controller]")]
     public class ProductsController : ControllerBase
     {
+        private readonly StoreContext? _context;
+
+        public ProductsController(StoreContext? context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
-        [Route("/{id}")]
-        public string Get(int id)
+        [Route("{id}")]
+        public async Task<ActionResult<List<Product>>> GetProductsAsync(int id)
         {
-            return $"product with id : {id}";
+            var products = await _context.Products.ToListAsync();
+            return base.Ok(products);
         }
 
 
         [HttpGet]
-        public string Get()
+        public ActionResult<string> GetProduct()
         {
             return "all products";
         }
