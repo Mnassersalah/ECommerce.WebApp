@@ -1,4 +1,4 @@
-﻿namespace Skinet.API.Entities
+﻿namespace Skinet.Core.Entities
 {
     public class Product
     {
