@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Skinet.Core.Entities;
+using Skinet.Core.Interfaces;
 using Skinet.Infrastructure.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,17 +12,17 @@ namespace Skinet.API.Controllers
     [Route("api/[Controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly StoreContext? _context;
+        private readonly IProductRepository _productRepo;
 
-        public ProductsController(StoreContext? context)
+        public ProductsController(IProductRepository productRepo)
         {
-            _context = context;
+            _productRepo = productRepo;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetProductsAsync()
         {
-            var products = await _context.Products.ToListAsync();
+            var products = await _productRepo.GetAllAsync();
             return base.Ok(products);
         }
 
@@ -30,7 +31,7 @@ namespace Skinet.API.Controllers
         [Route("{id}")]
         public async Task<ActionResult<Product>> GetProductAsync(int id)
         {
-            return await _context.Products.FindAsync(id);
+            return await _productRepo.GetByIDAsync(id);
         }
 
 
