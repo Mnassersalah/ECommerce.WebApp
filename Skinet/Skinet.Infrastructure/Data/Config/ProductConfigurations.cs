@@ -26,11 +26,11 @@ namespace Skinet.Infrastructure.Data.Config
 
             builder.HasOne(p => p.ProductType)
                    .WithMany()
-                   .HasForeignKey(p => p.ProductTypeID);
+                   .HasForeignKey(p => p.ProductTypeId);
             
             builder.HasOne(p => p.ProductBrand)
                    .WithMany()
-                   .HasForeignKey(p => p.ProductBrandID);
+                   .HasForeignKey(p => p.ProductBrandId);
 
 
         }

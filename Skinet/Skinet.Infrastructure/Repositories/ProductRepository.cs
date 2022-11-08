@@ -16,12 +16,18 @@ namespace Skinet.Infrastructure.Repositories
 
         public async Task<IReadOnlyList<Product>> GetAllAsync()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products
+                                 .Include(p => p.ProductBrand)
+                                 .Include(p => p.ProductType)
+                                 .ToListAsync();
         }
 
         public async Task<Product> GetByIDAsync(int id)
         {
-            return await _context.Products.FindAsync(id);
+            return await _context.Products
+                                 .Include(p => p.ProductBrand)
+                                 .Include(p => p.ProductType)
+                                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         

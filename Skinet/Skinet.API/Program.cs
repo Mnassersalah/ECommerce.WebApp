@@ -3,9 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Skinet.Core.Interfaces;
 using Skinet.Infrastructure.Data;
+using Skinet.Infrastructure.Data.DataSeed;
 using Skinet.Infrastructure.Repositories;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +27,24 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+//Migrate DB
+using (var scope = app.Services.CreateScope())
+{
+	var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+	try
+	{
+		logger.LogInformation("start migratin DB");
+		var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
+		await context.Database.MigrateAsync();
+		await DataSeed.SeedDataAsync(context, logger);
+	}
+	catch (Exception ex)
+	{
+		logger.LogError(ex, "Error happened during Migrating DB.");
+	}
+}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

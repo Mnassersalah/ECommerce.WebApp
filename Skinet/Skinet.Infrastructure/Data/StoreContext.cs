@@ -12,8 +12,8 @@ namespace Skinet.Infrastructure.Data
         }
 
         public DbSet<Product>? Products { get; set; }
-        public DbSet<ProductType>? ProductType { get; set; }
-        public DbSet<ProductType>? ProductBrand { get; set; }
+        public DbSet<ProductType>? ProductTypes { get; set; }
+        public DbSet<ProductType>? ProductBrands { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
