@@ -4,10 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Skinet.Core.Interfaces;
+using Skinet.API;
 using Skinet.Infrastructure.Data;
 using Skinet.Infrastructure.Data.DataSeed;
-using Skinet.Infrastructure.Repositories;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +19,7 @@ var config = builder.Configuration;
 builder.Services.AddDbContext<StoreContext>(optionsBuilder => 
     optionsBuilder.UseSqlite(config.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddSkinetServices();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

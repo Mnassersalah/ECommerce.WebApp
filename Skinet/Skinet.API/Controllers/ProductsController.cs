@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Skinet.Core.Entities;
 using Skinet.Core.Interfaces;
-using Skinet.Infrastructure.Data;
+using Skinet.Core.Specificatios;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,9 +11,9 @@ namespace Skinet.API.Controllers
     [Route("api/[Controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductRepository _productRepo;
+        private readonly IGenericRepository<Product> _productRepo;
 
-        public ProductsController(IProductRepository productRepo)
+        public ProductsController(IGenericRepository<Product> productRepo)
         {
             _productRepo = productRepo;
         }
@@ -22,7 +21,8 @@ namespace Skinet.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetProductsAsync()
         {
-            var products = await _productRepo.GetAllAsync();
+            var spec = new ProductsWithTypeAndBrandSpecification();
+            var products = await _productRepo.GetAllWithSpecAsync(spec);
             return base.Ok(products);
         }
 
@@ -31,7 +31,8 @@ namespace Skinet.API.Controllers
         [Route("{id}")]
         public async Task<ActionResult<Product>> GetProductAsync(int id)
         {
-            return await _productRepo.GetByIDAsync(id);
+            var spec = new ProductsWithTypeAndBrandSpecification(id);
+            return await _productRepo.GetWithSpecAsync(spec);
         }
 
 
