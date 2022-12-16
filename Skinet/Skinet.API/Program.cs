@@ -4,7 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Skinet.API;
+using Skinet.API.Extensions;
+using Skinet.API.Middlewares;
 using Skinet.Infrastructure.Data;
 using Skinet.Infrastructure.Data.DataSeed;
 using System;
@@ -48,19 +49,24 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseExceptionMiddleware();
+//app.UseExceptionHandler($"/error/{StatusCodes.Status500InternalServerError}");
+
+app.UseStatusCodePagesWithReExecute("/error/{0}");
+
 app.UseHttpsRedirection();
 
-app.UseRouting();
 app.UseStaticFiles();
 
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.Run();
